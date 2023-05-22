@@ -1,0 +1,31 @@
+{
+    "name": "@pqina/pintura-input",
+    "version": "9.0.0",
+    "browser": "dist/pinturainput.js",
+    "main": "dist/pinturainput.js",
+    "author": "Rik Schennink at PQINA",
+    "homepage": "https://pqina.nl/pintura/",
+    "license": "https://pqina.nl/pintura/license/",
+    "description": "A Pintura powered input element",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build && npm run build-rename-iife",
+        "build-rename-iife": "mv dist/pinturainput.iife.js dist/pinturainput-iife.js"
+    },
+    "devDependencies": {
+        "@sveltejs/vite-plugin-svelte": "^2.2.0",
+        "svelte": "^3.52.0",
+        "svelte-preprocess": "^5.0.3",
+        "tslib": "^2.5.0",
+        "typescript": "^5.0.4",
+        "vite": "^4.3.5",
+        "vite-plugin-banner": "^0.7.0"
+    },
+    "peerDependencies": {
+        "@pqina/pintura": "^8.x"
+    }
+}
