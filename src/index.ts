@@ -476,11 +476,15 @@ function init() {
     // don't allow multiple at this time
     inputFile.removeAttribute('multiple');
 
-    // listen for input
-    inputFile.addEventListener('change', () => this.edit());
+    // route events
+    this.handleEvent = (e) => {
+        const { type, target } = e;
+        if (type === 'change' && target === inputFile) return this.edit();
+        if (type === 'click') return routeClick(e);
+        if (type === 'dropfiles') return dropFiles(e);
+    };
 
-    // listen for button clicks and route events set with data attributes
-    this.addEventListener('click', (e: MouseEvent) => {
+    const routeClick = (e: MouseEvent) => {
         const { target } = e;
 
         const action = ['reset', 'remove', 'browse', 'edit'].find(
@@ -490,10 +494,9 @@ function init() {
         if (!action) return;
 
         this[action]();
-    });
+    };
 
-    // handle file drops
-    this.addEventListener('dropfiles', (e: CustomEvent) => {
+    const dropFiles = (e: CustomEvent) => {
         e.stopPropagation();
         const { detail } = e;
         const file = detail.resources[0];
@@ -504,7 +507,21 @@ function init() {
 
         // edit dropped file
         this.edit();
-    });
+    };
+
+    // listen for input
+    inputFile.addEventListener('change', this);
+
+    // listen for button clicks and route events set with data attributes
+    this.addEventListener('click', this);
+
+    // handle file drops
+    this.addEventListener('dropfiles', this);
+}
+
+function destroy() {
+    this.removeEventListener('click', this);
+    this.removeEventListener('dropfiles', this);
 }
 
 const ImageInputElement =
@@ -533,6 +550,10 @@ const ImageInputElement =
                 timerFallback = null;
                 init.apply(this);
             }, 0);
+        }
+
+        disconnectedCallback() {
+            destroy.apply(this);
         }
 
         browse() {
