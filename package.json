@@ -1,6 +1,6 @@
 {
     "name": "@pqina/pintura-input",
-    "version": "9.0.1",
+    "version": "9.0.2",
     "browser": "dist/pinturainput.js",
     "main": "dist/pinturainput.js",
     "author": "Rik Schennink at PQINA",

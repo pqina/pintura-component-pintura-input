@@ -312,6 +312,53 @@ const appendDefaultTemplate = (root: HTMLElement, html: string, templateProps: a
     if (!template.parentNode) root.appendChild(template);
 };
 
+// runs when the image was stored on a server or somewhere else
+const didStoreImage = (root: HTMLElement, dest: File, store) => {
+    // always hide the file input
+    const input = getFileInput(root);
+    input.hidden = true;
+
+    // set the response text to the hidden input
+    const responseInput = getResponseInput(root);
+    responseInput.value = store.responseText;
+
+    // switch to process view
+    setView(root, 'process', {
+        response: store.responseText,
+        filename: dest.name,
+        url: URL.createObjectURL(dest),
+    });
+};
+
+// runs when the output image was set to the file input element
+const didSetImage = (root: HTMLElement, dest: File) => {
+    // if a process view has been defined, it'll be used to show the ouptut
+    const didSetView = setView(root, 'process', {
+        filename: dest.name,
+        url: URL.createObjectURL(dest),
+    });
+
+    // hide file input if a process view was defined
+    if (didSetView) getFileInput(root).hidden = true;
+};
+
+const didSetCurrentState = (root: HTMLElement, currentState) => {
+    // did create image
+    const { dest, store } = currentState;
+    const input = getFileInput(root);
+
+    // the image has been stored on the server
+    if (store) {
+        didStoreImage(root, dest, store);
+    }
+    // wasn't sent to store, update file input value on modern browser (sorry Safari)
+    // https://pqina.nl/blog/the-trouble-with-editing-and-uploading-files-in-the-browser/
+    else {
+        fileInputSet(input, dest);
+        didSetImage(root, dest);
+    }
+};
+
 const edit = (
     root: ImageInputElement,
     src: ImageSource | undefined,
@@ -331,35 +378,6 @@ const edit = (
         ...nodeMapToObject(root.attributes),
     };
 
-    // runs when the image was stored on a server or somewhere else
-    const didStoreImage = (dest, store) => {
-        // always hide the file input
-        input.hidden = true;
-
-        // set the response text to the hidden input
-        const responseInput = getResponseInput(root);
-        responseInput.value = store.responseText;
-
-        // switch to process view
-        setView(root, 'process', {
-            response: store.responseText,
-            filename: dest.name,
-            url: URL.createObjectURL(dest),
-        });
-    };
-
-    // runs when the output image was set to the file input element
-    const didSetImage = (dest) => {
-        // if a process view has been defined, it'll be used to show the ouptut
-        const didSetView = setView(root, 'process', {
-            filename: dest.name,
-            url: URL.createObjectURL(dest),
-        });
-
-        // hide file input if a process view was defined
-        if (didSetView) getFileInput(root).hidden = true;
-    };
-
     // we're done processing the image
     const didProcessImage = (res?: PinturaDefaultImageWriterResult) => {
         // closed popup, clear file input
@@ -369,22 +387,24 @@ const edit = (
             return;
         }
 
-        // did create image
-        const { dest, store } = res;
-
         // store current state
         setCurrentState(root, res);
 
-        // the image has been stored on the server
-        if (store) {
-            didStoreImage(dest, store);
-        }
-        // wasn't sent to store, update file input value on modern browser (sorry Safari)
-        // https://pqina.nl/blog/the-trouble-with-editing-and-uploading-files-in-the-browser/
-        else {
-            fileInputSet(input, dest);
-            didSetImage(dest);
-        }
+        didSetCurrentState(root, res);
+
+        // // did create image
+        // const { dest, store } = res;
+
+        // // the image has been stored on the server
+        // if (store) {
+        //     didStoreImage(root, dest, store);
+        // }
+        // // wasn't sent to store, update file input value on modern browser (sorry Safari)
+        // // https://pqina.nl/blog/the-trouble-with-editing-and-uploading-files-in-the-browser/
+        // else {
+        //     fileInputSet(input, dest);
+        //     didSetImage(root, dest);
+        // }
     };
 
     // something went wrong clear input element
@@ -517,6 +537,11 @@ function init() {
 
     // handle file drops
     this.addEventListener('dropfiles', this);
+
+    // if has current state, restore its view
+    if (!this.currentState) return;
+
+    didSetCurrentState(this, this.currentState);
 }
 
 function destroy() {
@@ -533,7 +558,7 @@ const ImageInputElement =
             // children loaded, let's go
             if (this.innerHTML) return init.apply(this);
 
-            let timerFallback;
+            let timerFallback: number;
 
             const observer = new MutationObserver(() => {
                 if (timerFallback === null) return;

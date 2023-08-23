@@ -1,111 +1,111 @@
 /*!
-* Pintura Input v9.0.1 
+* Pintura Input v9.0.2 
 * (c) 2018-2023 PQINA Inc. - All Rights Reserved
 * License: https://pqina.nl/pintura/license/
 */
 /* eslint-disable */
-const C = (e, s, n = []) => {
-  const t = document.createElement(e), i = Object.getOwnPropertyDescriptors(t.__proto__);
-  for (const r in s)
-    r === "style" ? t.style.cssText = s[r] : i[r] && i[r].set || /textContent|innerHTML/.test(r) || typeof s[r] == "function" ? t[r] = s[r] : t.setAttribute(r, s[r]);
-  return n.forEach((r) => t.appendChild(r)), t;
-}, M = (e) => typeof e == "string";
+const C = (e, t, n = []) => {
+  const s = document.createElement(e), i = Object.getOwnPropertyDescriptors(s.__proto__);
+  for (const r in t)
+    r === "style" ? s.style.cssText = t[r] : i[r] && i[r].set || /textContent|innerHTML/.test(r) || typeof t[r] == "function" ? s[r] = t[r] : s.setAttribute(r, t[r]);
+  return n.forEach((r) => s.appendChild(r)), s;
+}, H = (e) => typeof e == "string";
 let b = null;
-const H = () => (b === null && (b = typeof window < "u" && typeof window.document < "u"), b), N = (e) => e.charAt(0).toLowerCase() + e.slice(1), q = (e) => e.charAt(0).toUpperCase() + e.slice(1), U = (e) => N(e.split("-").map(q).join("")), B = (e) => typeof e == "object", w = (e, s = {}, n = "", t = "") => Object.keys(s).filter((i) => !B(s[i])).reduce((i, r) => i.replace(new RegExp(n + r + t), s[r]), e), V = (e) => document.createElement(e).constructor !== HTMLElement, W = (e) => e instanceof Blob, G = (e) => /^image/.test(e.type), K = async (e) => new Promise((s) => {
+const N = () => (b === null && (b = typeof window < "u" && typeof window.document < "u"), b), q = (e) => e.charAt(0).toLowerCase() + e.slice(1), U = (e) => e.charAt(0).toUpperCase() + e.slice(1), B = (e) => q(e.split("-").map(U).join("")), V = (e) => typeof e == "object", w = (e, t = {}, n = "", s = "") => Object.keys(t).filter((i) => !V(t[i])).reduce((i, r) => i.replace(new RegExp(n + r + s), t[r]), e), W = (e) => document.createElement(e).constructor !== HTMLElement, G = (e) => e instanceof Blob, K = (e) => /^image/.test(e.type), $ = async (e) => new Promise((t) => {
   if (e.kind === "file")
-    return s(e.getAsFile());
-  e.getAsString(s);
-}), $ = (e) => new Promise((s, n) => {
-  const { items: t } = e.dataTransfer;
-  if (!t)
-    return s([]);
-  Promise.all(Array.from(t).map(K)).then((i) => {
-    s(
+    return t(e.getAsFile());
+  e.getAsString(t);
+}), J = (e) => new Promise((t, n) => {
+  const { items: s } = e.dataTransfer;
+  if (!s)
+    return t([]);
+  Promise.all(Array.from(s).map($)).then((i) => {
+    t(
       i.filter(
-        (r) => W(r) && G(r) || /^http/.test(r)
+        (r) => G(r) && K(r) || /^http/.test(r)
       )
     );
   }).catch(n);
-}), J = (e, s = {}) => {
+}), Y = (e, t = {}) => {
   const n = (i) => {
     i.preventDefault();
-  }, t = async (i) => {
+  }, s = async (i) => {
     i.preventDefault(), i.stopPropagation();
     try {
-      const r = await $(i);
+      const r = await J(i);
       e.dispatchEvent(
         new CustomEvent("dropfiles", {
           detail: {
             event: i,
             resources: r
           },
-          ...s
+          ...t
         })
       );
     } catch {
     }
   };
-  return e.addEventListener("drop", t), e.addEventListener("dragover", n), {
+  return e.addEventListener("drop", s), e.addEventListener("dragover", n), {
     destroy() {
-      e.removeEventListener("drop", t), e.removeEventListener("dragover", n);
+      e.removeEventListener("drop", s), e.removeEventListener("dragover", n);
     }
   };
-}, R = "pintura-input", Y = "PinturaInput", z = `<output data-process style="display:flex;align-items:center;pointer-events:none;">
+}, R = "pintura-input", z = "PinturaInput", Q = `<output data-process style="display:flex;align-items:center;pointer-events:none;">
     <img src="{url}" alt="" style="object-fit:cover;width:auto;height:1.5em;margin-right:.5em;"/>
     <span>{{success}}</span>
     <button data-remove style="pointer-events:all;margin-left:.5em;" aria-label="Reset">{{reset}}</button>
-</output>`, Q = `<div data-load style="display:flex;align-items:center;pointer-events:none;">
+</output>`, X = `<div data-load style="display:flex;align-items:center;pointer-events:none;">
     <img src="{{url}}" alt="" style="object-fit:cover;width:auto;height:1.5em;margin-right:.5em;"/>
     <button data-remove style="pointer-events:all;margin-left:.5em;" aria-label="Reset">{{reset}}</button>
-</output>`, X = ["accept", "capture"], Z = (e, s) => new Promise((n, t) => {
-  const { store: i, editor: r, eventTarget: f, imageState: m } = s, { openDefaultEditor: c, dispatchEditorEvents: o } = window.pintura, a = {};
-  r.imageReader && (a.imageReader = {
+</output>`, Z = ["accept", "capture"], ee = (e, t) => new Promise((n, s) => {
+  const { store: i, editor: r, eventTarget: m, imageState: p } = t, { openDefaultEditor: o, dispatchEditorEvents: a } = window.pintura, c = {};
+  r.imageReader && (c.imageReader = {
     ...r.imageReader
-  }), (r.imageWriter || i) && (a.imageWriter = {
-    store: (M(i), i),
+  }), (r.imageWriter || i) && (c.imageWriter = {
+    store: (H(i), i),
     ...r.imageWriter
   });
-  const l = c({
+  const l = o({
     // set reader and writer props
-    ...a,
+    ...c,
     // can overwrite anything with global props, except src property, will filter out properties below
-    ...ee(r, ["id", "name", "store", "imageWriter", "imageReader"]),
+    ...te(r, ["id", "name", "store", "imageWriter", "imageReader"]),
     src: e,
     // set initial image state
-    imageState: m
-  }), x = o(l, f);
-  let S = !1;
+    imageState: p
+  }), D = a(l, m);
+  let L = !1;
   l.on("loadabort", () => {
-    l.close(), S = !0;
-  }), l.on("loaderror", t), l.on("processerror", t), l.on("close", () => {
-    x.forEach((D) => D()), S ? t() : n(void 0);
+    l.close(), L = !0;
+  }), l.on("loaderror", s), l.on("processerror", s), l.on("close", () => {
+    D.forEach((M) => M()), L ? s() : n(void 0);
   }), l.on("process", n);
-}), u = (e, s) => e.getAttribute(s), ee = (e, s) => Object.keys(e).filter((n) => !s.includes(n)).reduce((n, t) => ({
+}), d = (e, t) => e.getAttribute(t), te = (e, t) => Object.keys(e).filter((n) => !t.includes(n)).reduce((n, s) => ({
   ...n,
-  [t]: e[t]
+  [s]: e[s]
 }), {}), g = (e) => {
   e.value = "", /safari/i.test(navigator.userAgent) || (e.type = "", e.type = "file"), delete e._files;
-}, P = (e, s) => {
+}, P = (e, t) => {
   try {
     const n = new DataTransfer();
-    n.items.add(s), e.files = n.files;
+    n.items.add(t), e.files = n.files;
   } catch {
-    e._files = [s];
+    e._files = [t];
   }
-}, te = (e) => {
+}, se = (e) => {
   if (!e || !e.matches('input[type="file"]'))
     return;
-  const s = e, n = s.files[0] || (s._files || [])[0];
+  const t = e, n = t.files[0] || (t._files || [])[0];
   if (n && /image/.test(n.type))
     return n;
-}, se = (e, s = "") => U(e.replace(new RegExp("^" + s, "g"), "")), ne = (e) => {
+}, ne = (e, t = "") => B(e.replace(new RegExp("^" + t, "g"), "")), re = (e) => {
   if (e === "true" || e === "false")
     return e === "true";
   if (!isNaN(e))
     return parseFloat(e);
   if (/[0-9]+\/[0-9]+/.test(e)) {
-    const [s, n] = e.split("/").map((t) => t.trim()).map(parseFloat);
-    return s / n;
+    const [t, n] = e.split("/").map((s) => s.trim()).map(parseFloat);
+    return t / n;
   }
   if (/^\{|\[/.test(e))
     try {
@@ -113,118 +113,121 @@ const H = () => (b === null && (b = typeof window < "u" && typeof window.documen
     } catch {
     }
   return e;
-}, re = (e) => Object.values(e).reduce((s, n) => {
-  const t = se(n.name);
-  return s[t] = ne(n.value), s;
-}, {}), ie = (e, s, n) => {
-  const t = Object.values(n).filter((r) => /^post/.test(r.name)).map((r) => [r.name.replace(/^post-/, ""), r.value]);
+}, ie = (e) => Object.values(e).reduce((t, n) => {
+  const s = ne(n.name);
+  return t[s] = re(n.value), t;
+}, {}), oe = (e, t, n) => {
+  const s = Object.values(n).filter((r) => /^post/.test(r.name)).map((r) => [r.name.replace(/^post-/, ""), r.value]);
   return {
-    url: s || "",
-    dataset: (r) => [...t, [e, r.dest, r.dest.name]]
+    url: t || "",
+    dataset: (r) => [...s, [e, r.dest, r.dest.name]]
   };
-}, F = (e, s) => (Array.from(e.attributes).filter(({ value: t }) => t.length && t.includes("{")).forEach(
-  ({ name: t, value: i }) => e.setAttribute(t, w(i, s, "{", "}"))
-), e.childNodes.forEach((t) => {
-  t.nodeType === 1 && (t = F(t, s)), t.nodeType === 3 && (t.textContent = w(t.textContent, s, "{", "}"));
-}), e), E = (e, s) => e && e.content.querySelector(`[data-${s}]`), j = (e) => e.querySelector("template"), _ = (e) => {
-  const s = j(e), n = E(s, "empty"), t = E(s, "load"), i = E(s, "process");
+}, F = (e, t) => (Array.from(e.attributes).filter(({ value: s }) => s.length && s.includes("{")).forEach(
+  ({ name: s, value: i }) => e.setAttribute(s, w(i, t, "{", "}"))
+), e.childNodes.forEach((s) => {
+  s.nodeType === 1 && (s = F(s, t)), s.nodeType === 3 && (s.textContent = w(s.textContent, t, "{", "}"));
+}), e), E = (e, t) => e && e.content.querySelector(`[data-${t}]`), j = (e) => e.querySelector("template"), _ = (e) => {
+  const t = j(e), n = E(t, "empty"), s = E(t, "load"), i = E(t, "process");
   return {
     empty: n,
-    load: t,
+    load: s,
     process: i
   };
-}, h = (e, s) => !!_(e)[s], oe = (e, s) => e.querySelector(`[data-${s}]`), d = (e, s, n) => {
-  const t = _(e);
-  if (Object.keys(t).map((r) => oe(e, r)).filter(Boolean).forEach((r) => r.remove()), !t[s])
+}, h = (e, t) => !!_(e)[t], ae = (e, t) => e.querySelector(`[data-${t}]`), f = (e, t, n) => {
+  const s = _(e);
+  if (Object.keys(s).map((r) => ae(e, r)).filter(Boolean).forEach((r) => r.remove()), !s[t])
     return !1;
-  let i = t[s].cloneNode(!0);
-  return n && (i = F(i, n)), e.appendChild(i), e.querySelector("[data-drop]") && J(i, { bubbles: !0 }), !0;
-}, p = (e) => e.querySelector('input[type="file"]'), y = (e) => e.querySelector('input[type="hidden"]'), L = (e) => {
-  const s = u(e, "src");
-  if (s != null)
-    return s;
-}, I = (e) => e.currentState, v = (e, s) => {
-  e.currentState = s;
-}, k = (e) => u(e, "store"), A = (e, s, n) => {
-  const t = j(e) || document.createElement("template");
-  t.innerHTML = t.innerHTML + w(s, n, "{{", "}}"), t.parentNode || e.appendChild(t);
-}, ae = (e, s, n) => {
-  if (!s)
-    return;
-  const t = p(e);
+  let i = s[t].cloneNode(!0);
+  return n && (i = F(i, n)), e.appendChild(i), e.querySelector("[data-drop]") && Y(i, { bubbles: !0 }), !0;
+}, u = (e) => e.querySelector('input[type="file"]'), v = (e) => e.querySelector('input[type="hidden"]'), S = (e) => {
+  const t = d(e, "src");
+  if (t != null)
+    return t;
+}, I = (e) => e.currentState, y = (e, t) => {
+  e.currentState = t;
+}, k = (e) => d(e, "store"), A = (e, t, n) => {
+  const s = j(e) || document.createElement("template");
+  s.innerHTML = s.innerHTML + w(t, n, "{{", "}}"), s.parentNode || e.appendChild(s);
+}, ce = (e, t, n) => {
+  const s = u(e);
+  s.hidden = !0;
+  const i = v(e);
+  i.value = n.responseText, f(e, "process", {
+    response: n.responseText,
+    filename: t.name,
+    url: URL.createObjectURL(t)
+  });
+}, le = (e, t) => {
+  f(e, "process", {
+    filename: t.name,
+    url: URL.createObjectURL(t)
+  }) && (u(e).hidden = !0);
+}, x = (e, t) => {
+  const { dest: n, store: s } = t, i = u(e);
+  s ? ce(e, n, s) : (P(i, n), le(e, n));
+}, ue = (e, t, n) => {
   if (!t)
     return;
+  const s = u(e);
+  if (!s)
+    return;
   const i = {
-    ...window[Y],
+    ...window[z],
     ...window[e.id],
-    ...re(e.attributes)
-  }, r = (o, a) => {
-    t.hidden = !0;
-    const l = y(e);
-    l.value = a.responseText, d(e, "process", {
-      response: a.responseText,
-      filename: o.name,
-      url: URL.createObjectURL(o)
-    });
-  }, f = (o) => {
-    d(e, "process", {
-      filename: o.name,
-      url: URL.createObjectURL(o)
-    }) && (p(e).hidden = !0);
-  }, m = (o) => {
-    if (!o) {
-      v(globalThis, void 0), g(t);
+    ...ie(e.attributes)
+  }, r = (p) => {
+    if (!p) {
+      y(globalThis, void 0), g(s);
       return;
     }
-    const { dest: a, store: l } = o;
-    v(e, o), l ? r(a, l) : (P(t, a), f(a));
-  }, c = () => {
-    g(t);
+    y(e, p), x(e, p);
+  }, m = () => {
+    g(s);
   };
-  Z(s, {
+  ee(t, {
     editor: i,
     eventTarget: e,
     imageState: n,
-    store: i.store && ie(y(e).name, i.store, e.attributes)
-  }).then(m).catch(c);
+    store: i.store && oe(v(e).name, i.store, e.attributes)
+  }).then(r).catch(m);
 };
 function T() {
-  const e = k(this), s = L(this), n = {
-    success: u(this, "input-store-success") || '"{filename}" uploaded successfully',
-    reset: u(this, "input-button-reset") || "&times;",
-    url: s
+  const e = k(this), t = S(this), n = {
+    success: d(this, "input-store-success") || '"{filename}" uploaded successfully',
+    reset: d(this, "input-button-reset") || "&times;",
+    url: t
   };
-  s && !h(this, "load") && A(this, Q, n), e && !h(this, "process") && A(this, z, n);
-  let t = p(this), i = y(this);
-  const r = t && t.name || u(this, "name") || "image";
-  t || (t = C("input", { type: "file" }), X.forEach((c) => {
-    const o = u(this, c);
-    o !== null && t.setAttribute(c, o);
-  }), this.removeAttribute("name"), this.append(t)), e ? (t.removeAttribute("name"), i || (i = C("input", { type: "hidden", name: r }), this.append(i))) : t.name = r, !s && h(this, "empty") && (d(this, "empty"), t.hidden = !0), s && h(this, "load") && (d(this, "load"), t.hidden = !0), (!t.accept || !/image/.test(t.accept)) && (t.accept = "image/*"), t.removeAttribute("multiple"), this.handleEvent = (c) => {
-    const { type: o, target: a } = c;
-    if (o === "change" && a === t)
+  t && !h(this, "load") && A(this, X, n), e && !h(this, "process") && A(this, Q, n);
+  let s = u(this), i = v(this);
+  const r = s && s.name || d(this, "name") || "image";
+  s || (s = C("input", { type: "file" }), Z.forEach((o) => {
+    const a = d(this, o);
+    a !== null && s.setAttribute(o, a);
+  }), this.removeAttribute("name"), this.append(s)), e ? (s.removeAttribute("name"), i || (i = C("input", { type: "hidden", name: r }), this.append(i))) : s.name = r, !t && h(this, "empty") && (f(this, "empty"), s.hidden = !0), t && h(this, "load") && (f(this, "load"), s.hidden = !0), (!s.accept || !/image/.test(s.accept)) && (s.accept = "image/*"), s.removeAttribute("multiple"), this.handleEvent = (o) => {
+    const { type: a, target: c } = o;
+    if (a === "change" && c === s)
       return this.edit();
-    if (o === "click")
-      return f(c);
-    if (o === "dropfiles")
-      return m(c);
+    if (a === "click")
+      return m(o);
+    if (a === "dropfiles")
+      return p(o);
   };
-  const f = (c) => {
-    const { target: o } = c, a = ["reset", "remove", "browse", "edit"].find(
-      (l) => o.dataset[l] === ""
+  const m = (o) => {
+    const { target: a } = o, c = ["reset", "remove", "browse", "edit"].find(
+      (l) => a.dataset[l] === ""
     );
-    a && this[a]();
-  }, m = (c) => {
-    c.stopPropagation();
-    const { detail: o } = c, a = o.resources[0];
-    a && (P(t, a), this.edit());
+    c && this[c]();
+  }, p = (o) => {
+    o.stopPropagation();
+    const { detail: a } = o, c = a.resources[0];
+    c && (P(s, c), this.edit());
   };
-  t.addEventListener("change", this), this.addEventListener("click", this), this.addEventListener("dropfiles", this);
+  s.addEventListener("change", this), this.addEventListener("click", this), this.addEventListener("dropfiles", this), this.currentState && x(this, this.currentState);
 }
-function ce() {
+function pe() {
   this.removeEventListener("click", this), this.removeEventListener("dropfiles", this);
 }
-const O = H() && class extends HTMLElement {
+const O = N() && class extends HTMLElement {
   constructor() {
     super(...arguments), this.currentState = void 0;
   }
@@ -232,37 +235,37 @@ const O = H() && class extends HTMLElement {
     if (this.innerHTML)
       return T.apply(this);
     let e;
-    const s = new MutationObserver(() => {
-      e !== null && (clearTimeout(e), T.apply(this), s.disconnect());
+    const t = new MutationObserver(() => {
+      e !== null && (clearTimeout(e), T.apply(this), t.disconnect());
     });
-    s.observe(this, {
+    t.observe(this, {
       childList: !0
     }), e = setTimeout(() => {
       e = null, T.apply(this);
     }, 0);
   }
   disconnectedCallback() {
-    ce.apply(this);
+    pe.apply(this);
   }
   browse() {
     this.querySelector('input[type="file"]').click();
   }
   reset() {
-    if (v(this, void 0), !L(this))
+    if (y(this, void 0), !S(this))
       return this.remove();
-    g(p(this)), d(this, "load");
+    g(u(this)), f(this, "load");
   }
   remove() {
-    const e = p(this);
-    g(e), v(this, void 0), k(this) && (y(this).value = ""), d(this, "empty") || (e.hidden = !1);
+    const e = u(this);
+    g(e), y(this, void 0), k(this) && (v(this).value = ""), f(this, "empty") || (e.hidden = !1);
   }
   edit() {
-    var n, t;
-    const e = p(this);
+    var n, s;
+    const e = u(this);
     if (!e)
       return;
-    const s = ((n = I(this)) == null ? void 0 : n.src) || te(e) || L(this);
-    ae(this, s, (t = I(this)) == null ? void 0 : t.imageState);
+    const t = ((n = I(this)) == null ? void 0 : n.src) || se(e) || S(this);
+    ue(this, t, (s = I(this)) == null ? void 0 : s.imageState);
   }
 };
-O && !V(R) && customElements.define(R, O);
+O && !W(R) && customElements.define(R, O);
