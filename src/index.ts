@@ -391,20 +391,6 @@ const edit = (
         setCurrentState(root, res);
 
         didSetCurrentState(root, res);
-
-        // // did create image
-        // const { dest, store } = res;
-
-        // // the image has been stored on the server
-        // if (store) {
-        //     didStoreImage(root, dest, store);
-        // }
-        // // wasn't sent to store, update file input value on modern browser (sorry Safari)
-        // // https://pqina.nl/blog/the-trouble-with-editing-and-uploading-files-in-the-browser/
-        // else {
-        //     fileInputSet(input, dest);
-        //     didSetImage(root, dest);
-        // }
     };
 
     // something went wrong clear input element
